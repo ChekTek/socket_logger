@@ -7,31 +7,31 @@ import 'socket_service.dart';
 final getIt = GetIt.instance;
 
 class LogList extends StatelessWidget {
-  final List<Log> logWidgets = [];
-
   LogList({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var service = getIt<SocketService>();
+
     return StreamBuilder(
-        stream: getIt<SocketService>().logs,
+        stream: service.logs,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             var messages = (snapshot.data as String).split('\n');
 
             messages.forEach((message) {
               if (message.trim() != '') {
-                logWidgets.insert(0, Log(message));
+                service.logWidgets.insert(0, Log(message));
               }
             });
 
             return Flexible(
                 child: ListView.builder(
-                    itemCount: logWidgets.length,
+                    itemCount: service.logWidgets.length,
                     itemBuilder: (context, index) {
-                      return logWidgets[index];
+                      return service.logWidgets[index];
                     }));
           }
 

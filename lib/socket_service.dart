@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'log.dart';
+
 class SocketService {
   var connected = false;
   var connecting = false;
   String host = 'localhost:6969';
-  List<String> logList = [];
   late ServerSocket server;
+  final List<Log> logWidgets = [];
 
   final _controller = StreamController<String>();
 
@@ -55,5 +57,10 @@ class SocketService {
     server.close();
     connected = false;
     connecting = false;
+  }
+
+  clearLogs() {
+    logWidgets.clear();
+    _controller.sink.add('');
   }
 }

@@ -59,28 +59,49 @@ class _SocketControlState extends State<SocketControl> {
     var service = getIt<SocketService>();
     var connected = service.connected;
 
-    return TextField(
-      controller: widget.c,
-      decoration: InputDecoration(
-        hintText: 'Enter socket',
-        suffix: connected
-            ? MaterialButton(
-                child: const Text('Disconnect'),
-                color: Colors.red,
-                textColor: Colors.white,
-                onPressed: () {
-                  service.disconnect();
-                  setState(() {});
-                })
-            : MaterialButton(
-                child: const Text('Connect'),
-                color: Colors.blue,
-                textColor: Colors.white,
-                onPressed: () {
-                  service.connect(widget.c.text);
-                  setState(() {});
-                }),
-      ),
+    return Flex(
+      direction: Axis.horizontal,
+      children: [
+        Container(
+          margin: const EdgeInsetsDirectional.only(end: 8.0),
+          child: IconButton(
+            onPressed: () {
+              service.clearLogs();
+            },
+            icon: const Icon(Icons.delete),
+            color: Colors.red,
+            hoverColor: Colors.transparent,
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            focusColor: Colors.transparent,
+          ),
+        ),
+        Expanded(
+          child: TextField(
+            controller: widget.c,
+            decoration: InputDecoration(
+              hintText: 'Enter socket',
+              suffix: connected
+                  ? MaterialButton(
+                      child: const Text('Disconnect'),
+                      color: Colors.red,
+                      textColor: Colors.white,
+                      onPressed: () {
+                        service.disconnect();
+                        setState(() {});
+                      })
+                  : MaterialButton(
+                      child: const Text('Connect'),
+                      color: Colors.blue,
+                      textColor: Colors.white,
+                      onPressed: () {
+                        service.connect(widget.c.text);
+                        setState(() {});
+                      }),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
