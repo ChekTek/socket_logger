@@ -14,14 +14,15 @@ class SocketService {
 
     try {
       var socketInfo = host.split(':');
-      var server =
-          await ServerSocket.bind(socketInfo[0], int.parse(socketInfo[1]));
+      var server = await ServerSocket.bind(
+        socketInfo[0],
+        int.parse(socketInfo[1]),
+      );
 
       server.listen((Socket client) {
         client.listen(
-          (List<int> data) {
+          (data) {
             String result = String.fromCharCodes(data);
-            print(result);
             _controller.sink.add(result);
           },
           onError: (error) {

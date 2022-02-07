@@ -19,7 +19,14 @@ class LogList extends StatelessWidget {
         stream: getIt<SocketService>().logs,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            logWidgets.insert(0, Log(snapshot.data as String));
+            var messages = (snapshot.data as String).split('\n');
+
+            messages.forEach((message) {
+              if (message.trim() != '') {
+                logWidgets.insert(0, Log(message));
+              }
+            });
+
             return Flexible(
                 child: ListView.builder(
                     itemCount: logWidgets.length,
