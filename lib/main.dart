@@ -32,23 +32,55 @@ class MyApp extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsetsDirectional.only(start: 8.0, end: 8.0),
-                child: TextField(
-                  controller: c,
-                  decoration: InputDecoration(
-                    hintText: 'Enter socket',
-                    suffix: MaterialButton(
-                        child: const Text('Connect'),
-                        color: Colors.blue,
-                        textColor: Colors.white,
-                        onPressed: () {
-                          getIt<SocketService>().updateSocketConnection(c.text);
-                        }),
-                  ),
-                ),
+                child: SocketControl(c: c),
               ),
               LogList(),
             ],
           )),
+    );
+  }
+}
+
+class SocketControl extends StatefulWidget {
+  const SocketControl({
+    Key? key,
+    required this.c,
+  }) : super(key: key);
+
+  final TextEditingController c;
+
+  @override
+  State<SocketControl> createState() => _SocketControlState();
+}
+
+class _SocketControlState extends State<SocketControl> {
+  @override
+  Widget build(BuildContext context) {
+    var service = getIt<SocketService>();
+    var connected = service.connected;
+
+    return TextField(
+      controller: widget.c,
+      decoration: InputDecoration(
+        hintText: 'Enter socket',
+        suffix: connected
+            ? MaterialButton(
+                child: const Text('Disconnect'),
+                color: Colors.red,
+                textColor: Colors.white,
+                onPressed: () {
+                  service.disconnect();
+                  setState(() {});
+                })
+            : MaterialButton(
+                child: const Text('Connect'),
+                color: Colors.blue,
+                textColor: Colors.white,
+                onPressed: () {
+                  service.connect(widget.c.text);
+                  setState(() {});
+                }),
+      ),
     );
   }
 }

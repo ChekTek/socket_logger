@@ -2,19 +2,28 @@ import 'dart:async';
 import 'dart:io';
 
 class SocketService {
+  var connected = false;
+  var connecting = false;
   String host = 'localhost:6969';
   List<String> logList = [];
+  late ServerSocket server;
 
   final _controller = StreamController<String>();
 
   Stream<String> get logs => _controller.stream;
 
-  updateSocketConnection(String socket) async {
+  connect(String socket) async {
+    if (connecting || connected) {
+      return;
+    }
+
+    connecting = true;
+
     host = socket;
 
     try {
       var socketInfo = host.split(':');
-      var server = await ServerSocket.bind(
+      server = await ServerSocket.bind(
         socketInfo[0],
         int.parse(socketInfo[1]),
       );
@@ -35,8 +44,16 @@ class SocketService {
           },
         );
       });
+      connected = true;
+      connecting = false;
     } catch (e) {
       print(e);
     }
+  }
+
+  disconnect() {
+    server.close();
+    connected = false;
+    connecting = false;
   }
 }
