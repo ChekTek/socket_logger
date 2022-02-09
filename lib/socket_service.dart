@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
+import 'package:web_socket_channel/web_socket_channel.dart';
 // import 'package:web_socket_channel/web_socket_channel.dart';
 
 import 'log.dart';
@@ -27,17 +28,15 @@ class SocketService {
 
     host = socket;
 
-    var handler = webSocketHandler((webSocket) {
-      // add this type in a PR for this library...
-      // (webSocket as WebSocketChannel)
-      print(webSocket);
-      webSocket.stream.listen((message) {
+    var handler = webSocketHandler((WebSocketChannel channel) {
+      print(channel);
+      channel.stream.listen((message) {
         _controller.sink.add(message);
         print(message);
       });
     });
 
-    shelf_io.serve(handler, 'localhost', 6969).then((server) {
+    shelf_io.serve((handler), 'localhost', 6969).then((server) {
       print('Serving at ws://${server.address.host}:${server.port}');
     });
 
