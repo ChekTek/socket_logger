@@ -28,6 +28,7 @@ class SocketService {
     host = socket;
 
     var handler = webSocketHandler((webSocket) {
+      // add this type in a PR for this library...
       // (webSocket as WebSocketChannel)
       print(webSocket);
       webSocket.stream.listen((message) {
