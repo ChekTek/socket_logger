@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:socket_logger/log_list.dart';
-import 'package:socket_logger/socket_service.dart';
+import 'package:socket_logger/services/alert_service.dart';
+import 'package:socket_logger/widgets/log_list.dart';
+import 'package:socket_logger/services/log_service.dart';
+import 'package:socket_logger/widgets/socket_control.dart';
+import 'package:socket_logger/services/socket_service.dart';
 
 final getIt = GetIt.instance;
-void main() {
-  getIt.registerSingleton(SocketService());
 
+void main() {
   runApp(const MyApp());
 }
 
@@ -16,98 +18,45 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final c = TextEditingController(text: getIt<SocketService>().host);
-
     return MaterialApp(
       title: 'Socket Logger',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Socket Logger'),
-          ),
-          body: Column(
-            children: [
-              Container(
-                padding: const EdgeInsetsDirectional.only(start: 8.0, end: 8.0),
-                child: SocketControl(c: c),
-              ),
-              LogList(),
-            ],
-          )),
+      home: const Home(),
     );
   }
 }
 
-class SocketControl extends StatefulWidget {
-  const SocketControl({
+class Home extends StatelessWidget {
+  const Home({
     Key? key,
-    required this.c,
   }) : super(key: key);
 
-  final TextEditingController c;
-
-  @override
-  State<SocketControl> createState() => _SocketControlState();
-}
-
-class _SocketControlState extends State<SocketControl> {
   @override
   Widget build(BuildContext context) {
-    var service = getIt<SocketService>();
-    var connected = service.connected;
+    if (!getIt.isRegistered<AlertService>()) {
+      getIt.registerSingleton(LogService());
+      getIt.registerSingleton(AlertService(context));
+      getIt.registerSingleton(SocketService());
+    }
 
-    return Flex(
-      direction: Axis.horizontal,
-      children: [
-        Padding(
-          padding: const EdgeInsetsDirectional.only(start: 8.0, top: 10.0),
-          child: connected
-              ? MaterialButton(
-                  child: const Text('Disconnect'),
-                  color: Colors.red,
-                  textColor: Colors.white,
-                  onPressed: () {
-                    service.disconnect();
-                    setState(() {});
-                  })
-              : MaterialButton(
-                  child: const Text('Connect'),
-                  color: Colors.blue,
-                  textColor: Colors.white,
-                  onPressed: () {
-                    service.connect(widget.c.text);
-                    setState(() {});
-                  }),
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Socket Logger'),
         ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16, right: 8),
-            child: TextField(
-              controller: widget.c,
-              decoration: const InputDecoration(
-                hintText: 'Enter socket',
+        body: Column(
+          children: [
+            Container(
+              padding: const EdgeInsetsDirectional.only(start: 8.0, end: 8.0),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: SocketControl(),
               ),
             ),
-          ),
-        ),
-        Container(
-          margin: const EdgeInsetsDirectional.only(end: 8.0, top: 8.0),
-          child: IconButton(
-            onPressed: () {
-              service.clearLogs();
-            },
-            icon: const Icon(Icons.delete),
-            color: Colors.red,
-            hoverColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            focusColor: Colors.transparent,
-          ),
-        ),
-      ],
-    );
+            LogList(),
+          ],
+        ));
   }
 }
