@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:get_it/get_it.dart';
@@ -21,34 +22,23 @@ class SocketService {
   Stream<bool> get status => _statusController.stream;
 
   connect(String socketString) async {
-    if (connecting || connected) {
-      return;
-    }
-
-    socketString = socketString.replaceAll('ws://', '');
-
-    var index = socketString.lastIndexOf(':');
-
-    if (index == -1) {
-      alertService.showError(
-        'Connection Failed',
-        'Cannot identify the port.',
-      );
-    } else {
-      var host = socketString.substring(0, index);
-      var port = int.tryParse(
-              socketString.substring(index + 1, socketString.length)) ??
-          -1;
-
-      if (port == -1) {
-        alertService.showError(
-          'Connection Failed',
-          'Cannot identify the port.',
-        );
+    try {
+      if (connecting || connected) {
         return;
       }
 
       connecting = true;
+
+      socketString = socketString.replaceAll('ws://', '');
+
+      var index = socketString.lastIndexOf(':');
+      if (index == -1) {
+        throw ('Invalid port');
+      }
+      var host = socketString.substring(0, index);
+      var port = int.tryParse(
+              socketString.substring(index + 1, socketString.length)) ??
+          -1;
 
       server = await HttpServer.bind(host, port);
       server.transform(WebSocketTransformer()).listen((socket) {
@@ -59,6 +49,12 @@ class SocketService {
       _statusController.sink.add(true);
       connected = true;
       connecting = false;
+    } catch (error) {
+      inspect(error);
+      alertService.showError('Failed to Start Server.', error.toString());
+      connected = false;
+      connecting = false;
+      _statusController.sink.add(false);
     }
   }
 
