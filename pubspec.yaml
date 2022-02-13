@@ -1,5 +1,5 @@
-name: socket_logger
-description: A new Flutter project.
+name: "socket_logger"
+description: A small websocket server used for logging.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -30,8 +30,6 @@ dependencies:
   flutter:
     sdk: flutter
   get_it: ^7.2.0
-  web_socket_channel: ^2.1.0
-  shelf_web_socket: ^1.0.1
   
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

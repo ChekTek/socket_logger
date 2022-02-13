@@ -19,7 +19,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Socket Logger',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -43,20 +42,17 @@ class Home extends StatelessWidget {
     }
 
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Socket Logger'),
-        ),
         body: Column(
-          children: [
-            Container(
-              padding: const EdgeInsetsDirectional.only(start: 8.0, end: 8.0),
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: SocketControl(),
-              ),
-            ),
-            LogList(),
-          ],
-        ));
+      children: [
+        Container(
+          padding: const EdgeInsetsDirectional.only(start: 8.0, end: 8.0),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: SocketControl(),
+          ),
+        ),
+        LogList(),
+      ],
+    ));
   }
 }
