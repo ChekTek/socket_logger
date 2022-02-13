@@ -33,7 +33,7 @@ class _SocketControlState extends State<SocketControl> {
                     var status = snapshot.data as bool;
                     return status
                         ? MaterialButton(
-                            child: const Text('Disconnect'),
+                            child: const Text('Stop'),
                             color: Colors.red,
                             textColor: Colors.white,
                             onPressed: () {
@@ -41,7 +41,7 @@ class _SocketControlState extends State<SocketControl> {
                               setState(() {});
                             })
                         : MaterialButton(
-                            child: const Text('Connect'),
+                            child: const Text('Start'),
                             color: Colors.blue,
                             textColor: Colors.white,
                             onPressed: () {
@@ -50,7 +50,7 @@ class _SocketControlState extends State<SocketControl> {
                             });
                   } else {
                     return MaterialButton(
-                        child: const Text('Connect'),
+                        child: const Text('Start'),
                         color: Colors.blue,
                         textColor: Colors.white,
                         onPressed: () {
