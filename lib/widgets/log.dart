@@ -24,8 +24,8 @@ class Log extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black26,
                   spreadRadius: 2,
-                  blurRadius: 3,
-                  offset: Offset(1, 1),
+                  blurRadius: 2,
+                  offset: Offset(0, 1),
                 ),
               ],
               color: Colors.grey[400],
@@ -35,7 +35,8 @@ class Log extends StatelessWidget {
               ),
             ),
             child: Container(
-              padding: const EdgeInsets.all(6.0),
+              padding:
+                  const EdgeInsets.only(top: 4, bottom: 4, left: 6, right: 6),
               child: Text(
                 dateTime,
                 textScaleFactor: 0.75,
