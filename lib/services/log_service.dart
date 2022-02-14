@@ -12,7 +12,7 @@ class LogService {
       if (_logs.length >= 100) {
         _logs.removeLast();
       }
-      _logs.insert(0, Log(message));
+      _logs.insert(0, Log(message, DateTime.now().toString()));
       _logController.sink.add(_logs);
     }
   }
