@@ -10,44 +10,39 @@ import 'package:socket_logger/widgets/socket_control.dart';
 import 'package:socket_logger/services/socket_service.dart';
 
 final getIt = GetIt.instance;
+final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 Future<void> appInit(BuildContext context) async {
   final sharedPreferences = await SharedPreferences.getInstance();
+  getIt.registerSingleton(AlertService(navigatorKey));
   getIt.registerSingleton(Preferences(sharedPreferences));
   getIt.registerSingleton(LogService());
-  getIt.registerSingleton(AlertService(context));
   getIt.registerSingleton(SocketService());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
+class MyApp extends StatelessWidget {
   var initialized = false;
+  MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(brightness: Brightness.light),
-      darkTheme: ThemeData(brightness: Brightness.dark),
-      themeMode: ThemeMode.light, //TODO: dark mode toggle
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      navigatorKey: navigatorKey,
       home: initialized
           ? const Home()
           : FutureBuilder(
               future: appInit(context),
               builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  initialized = true;
                   return const Home();
                 } else {
                   return const Loading();

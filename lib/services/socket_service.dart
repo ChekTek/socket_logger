@@ -53,6 +53,7 @@ class SocketService {
           for (var socket in openSockets) {
             socket.close();
           }
+          openSockets = [];
         },
       );
       _statusController.sink.add(true);

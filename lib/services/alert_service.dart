@@ -1,28 +1,31 @@
 import 'package:flutter/material.dart';
 
 class AlertService {
-  final BuildContext _context;
+  final GlobalKey<NavigatorState> _navigatorKey;
 
-  AlertService(this._context);
+  AlertService(this._navigatorKey);
 
   showError(String title, String message) {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
-      showDialog(
-          context: _context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text(title),
-              content: Text(message),
-              actions: [
-                TextButton(
-                  child: const Text("OK"),
-                  onPressed: () {
-                    closeDialog(context);
-                  },
-                ),
-              ],
-            );
-          });
+      final context = _navigatorKey.currentContext;
+      if (context != null) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(title),
+                content: Text(message),
+                actions: [
+                  TextButton(
+                    child: const Text("OK"),
+                    onPressed: () {
+                      closeDialog(context);
+                    },
+                  ),
+                ],
+              );
+            });
+      }
     });
   }
 
