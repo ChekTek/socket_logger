@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:socket_logger/services/preference_service.dart';
+import 'package:socket_logger/data/preferences.dart';
 import 'package:socket_logger/services/socket_service.dart';
 
 import '../services/log_service.dart';
@@ -8,8 +8,7 @@ import '../services/log_service.dart';
 final getIt = GetIt.instance;
 
 class SocketControl extends StatefulWidget {
-  final controller =
-      TextEditingController(text: getIt<PreferenceService>().host);
+  final controller = TextEditingController(text: getIt<Preferences>().host);
 
   SocketControl({Key? key}) : super(key: key);
 
@@ -19,9 +18,9 @@ class SocketControl extends StatefulWidget {
 
 class _SocketControlState extends State<SocketControl> {
   SocketService socketService = getIt<SocketService>();
-  PreferenceService preferenceService = getIt<PreferenceService>();
+  Preferences preferenceService = getIt<Preferences>();
   LogService logService = getIt<LogService>();
-  bool isChecked = getIt<PreferenceService>().autoStart;
+  bool isChecked = getIt<Preferences>().autoStart;
 
   @override
   void initState() {

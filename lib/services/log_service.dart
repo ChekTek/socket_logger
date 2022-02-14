@@ -9,7 +9,7 @@ class LogService {
 
   log(String message) {
     if (message.isNotEmpty) {
-      _logs.add(Log(message));
+      _logs.insert(0, Log(message));
       _logController.sink.add(_logs);
     }
   }

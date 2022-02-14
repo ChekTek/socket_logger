@@ -1,9 +1,9 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PreferenceService {
+class Preferences {
   final SharedPreferences _sharedPreferences;
 
-  PreferenceService(this._sharedPreferences);
+  Preferences(this._sharedPreferences);
 
   String get host {
     return _sharedPreferences.getString('host') ?? '';

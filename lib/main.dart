@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_logger/services/alert_service.dart';
-import 'package:socket_logger/services/preference_service.dart';
+import 'package:socket_logger/data/preferences.dart';
+import 'package:socket_logger/widgets/loading.dart';
 import 'package:socket_logger/widgets/log_list.dart';
 import 'package:socket_logger/services/log_service.dart';
 import 'package:socket_logger/widgets/socket_control.dart';
@@ -10,25 +11,49 @@ import 'package:socket_logger/services/socket_service.dart';
 
 final getIt = GetIt.instance;
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final SharedPreferences preferences = await SharedPreferences.getInstance();
-  getIt.registerSingleton(PreferenceService(preferences));
+void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+Future<void> appInit(BuildContext context) async {
+  final sharedPreferences = await SharedPreferences.getInstance();
+  getIt.registerSingleton(Preferences(sharedPreferences));
+  getIt.registerSingleton(LogService());
+  getIt.registerSingleton(AlertService(context));
+  getIt.registerSingleton(SocketService());
+}
+
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  var initialized = false;
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const Home(),
+      theme: ThemeData(brightness: Brightness.light),
+      darkTheme: ThemeData(brightness: Brightness.dark),
+      themeMode: ThemeMode.light, //TODO: dark mode toggle
+      home: initialized
+          ? const Home()
+          : FutureBuilder(
+              future: appInit(context),
+              builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  initialized = true;
+                  return const Home();
+                } else {
+                  return const Loading();
+                }
+              },
+            ),
     );
   }
 }
@@ -40,12 +65,6 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!getIt.isRegistered<AlertService>()) {
-      getIt.registerSingleton(LogService());
-      getIt.registerSingleton(AlertService(context));
-      getIt.registerSingleton(SocketService());
-    }
-
     return Scaffold(
         body: Column(
       children: [
