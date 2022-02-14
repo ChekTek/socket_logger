@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:socket_logger/services/preference_service.dart';
 import 'package:socket_logger/services/socket_service.dart';
 
 import '../services/log_service.dart';
@@ -7,7 +8,8 @@ import '../services/log_service.dart';
 final getIt = GetIt.instance;
 
 class SocketControl extends StatefulWidget {
-  final TextEditingController c = TextEditingController(text: 'localhost:6969');
+  final controller =
+      TextEditingController(text: getIt<PreferenceService>().host);
 
   SocketControl({Key? key}) : super(key: key);
 
@@ -16,10 +18,25 @@ class SocketControl extends StatefulWidget {
 }
 
 class _SocketControlState extends State<SocketControl> {
+  SocketService socketService = getIt<SocketService>();
+  PreferenceService preferenceService = getIt<PreferenceService>();
+  LogService logService = getIt<LogService>();
+  bool isChecked = getIt<PreferenceService>().autoStart;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (preferenceService.autoStart) {
+      socketService.connect(widget.controller.text);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    var socketService = getIt<SocketService>();
-    var logService = getIt<LogService>();
+    widget.controller.addListener(() {
+      preferenceService.setHost(widget.controller.value.text);
+    });
 
     return Flex(
       direction: Axis.horizontal,
@@ -45,7 +62,7 @@ class _SocketControlState extends State<SocketControl> {
                             color: Colors.blue,
                             textColor: Colors.white,
                             onPressed: () {
-                              socketService.connect(widget.c.text);
+                              socketService.connect(widget.controller.text);
                               setState(() {});
                             });
                   } else {
@@ -54,7 +71,7 @@ class _SocketControlState extends State<SocketControl> {
                         color: Colors.blue,
                         textColor: Colors.white,
                         onPressed: () {
-                          socketService.connect(widget.c.text);
+                          socketService.connect(widget.controller.text);
                           setState(() {});
                         });
                   }
@@ -64,11 +81,24 @@ class _SocketControlState extends State<SocketControl> {
             padding: const EdgeInsets.only(left: 16, right: 8),
             child: TextField(
               textAlignVertical: TextAlignVertical.bottom,
-              controller: widget.c,
-              decoration: const InputDecoration(
-                hintText: 'Enter socket',
-              ),
+              controller: widget.controller,
+              decoration: const InputDecoration(hintText: 'Enter socket'),
             ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Row(
+            children: [
+              Checkbox(
+                  value: isChecked,
+                  onChanged: (value) {
+                    isChecked = value as bool;
+                    preferenceService.setAutoStart(isChecked);
+                    setState(() {});
+                  }),
+              const Text('AutoStart')
+            ],
           ),
         ),
         Container(

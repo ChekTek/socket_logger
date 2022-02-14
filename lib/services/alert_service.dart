@@ -6,22 +6,24 @@ class AlertService {
   AlertService(this._context);
 
   showError(String title, String message) {
-    showDialog(
-        context: _context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text(title),
-            content: Text(message),
-            actions: [
-              TextButton(
-                child: const Text("OK"),
-                onPressed: () {
-                  closeDialog(context);
-                },
-              ),
-            ],
-          );
-        });
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      showDialog(
+          context: _context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text(title),
+              content: Text(message),
+              actions: [
+                TextButton(
+                  child: const Text("OK"),
+                  onPressed: () {
+                    closeDialog(context);
+                  },
+                ),
+              ],
+            );
+          });
+    });
   }
 
   closeDialog(BuildContext context) {

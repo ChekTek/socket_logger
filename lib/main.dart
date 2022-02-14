@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_logger/services/alert_service.dart';
+import 'package:socket_logger/services/preference_service.dart';
 import 'package:socket_logger/widgets/log_list.dart';
 import 'package:socket_logger/services/log_service.dart';
 import 'package:socket_logger/widgets/socket_control.dart';
@@ -8,7 +10,10 @@ import 'package:socket_logger/services/socket_service.dart';
 
 final getIt = GetIt.instance;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final SharedPreferences preferences = await SharedPreferences.getInstance();
+  getIt.registerSingleton(PreferenceService(preferences));
   runApp(const MyApp());
 }
 
@@ -51,7 +56,7 @@ class Home extends StatelessWidget {
             child: SocketControl(),
           ),
         ),
-        LogList(),
+        const LogList(),
       ],
     ));
   }

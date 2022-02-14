@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:get_it/get_it.dart';
@@ -40,17 +39,26 @@ class SocketService {
               socketString.substring(index + 1, socketString.length)) ??
           -1;
 
+      List<WebSocket> openSockets = [];
+
       server = await HttpServer.bind(host, port);
-      server.transform(WebSocketTransformer()).listen((socket) {
-        socket.listen((msg) {
-          logService.log(msg);
-        });
-      });
+      server.transform(WebSocketTransformer()).listen(
+        (socket) {
+          socket.listen((msg) {
+            logService.log(msg);
+          });
+          openSockets.add(socket);
+        },
+        onDone: () {
+          for (var socket in openSockets) {
+            socket.close();
+          }
+        },
+      );
       _statusController.sink.add(true);
       connected = true;
       connecting = false;
     } catch (error) {
-      inspect(error);
       alertService.showError('Failed to Start Server.', error.toString());
       connected = false;
       connecting = false;
@@ -59,7 +67,7 @@ class SocketService {
   }
 
   disconnect() {
-    server.close();
+    server.close(force: true).then((socketServer) => socketServer.close());
     _statusController.sink.add(false);
     connected = false;
     connecting = false;
