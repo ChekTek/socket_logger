@@ -11,7 +11,6 @@ final getIt = GetIt.instance;
 class SocketService {
   var alertService = getIt<AlertService>();
   var logService = getIt<LogService>();
-
   var connected = false;
   var connecting = false;
   late HttpServer server;
