@@ -18,6 +18,24 @@ class _ServerButtonState extends State<ServerButton> {
 
   @override
   Widget build(BuildContext context) {
+    var connectButton = MaterialButton(
+        child: const Text('Start'),
+        color: Colors.blue,
+        textColor: Colors.white,
+        onPressed: () {
+          socketService.connect(widget.serverStringController.text);
+          setState(() {});
+        });
+
+    var disconnectButton = MaterialButton(
+        child: const Text('Stop'),
+        color: Colors.red,
+        textColor: Colors.white,
+        onPressed: () {
+          socketService.disconnect();
+          setState(() {});
+        });
+
     return Padding(
         padding: const EdgeInsetsDirectional.only(start: 8.0, top: 10.0),
         child: StreamBuilder(
@@ -25,33 +43,9 @@ class _ServerButtonState extends State<ServerButton> {
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
               if (snapshot.hasData) {
                 var status = snapshot.data as bool;
-                return status
-                    ? MaterialButton(
-                        child: const Text('Stop'),
-                        color: Colors.red,
-                        textColor: Colors.white,
-                        onPressed: () {
-                          socketService.disconnect();
-                          setState(() {});
-                        })
-                    : MaterialButton(
-                        child: const Text('Start'),
-                        color: Colors.blue,
-                        textColor: Colors.white,
-                        onPressed: () {
-                          socketService
-                              .connect(widget.serverStringController.text);
-                          setState(() {});
-                        });
+                return status ? disconnectButton : connectButton;
               } else {
-                return MaterialButton(
-                    child: const Text('Start'),
-                    color: Colors.blue,
-                    textColor: Colors.white,
-                    onPressed: () {
-                      socketService.connect(widget.serverStringController.text);
-                      setState(() {});
-                    });
+                return connectButton;
               }
             }));
   }
