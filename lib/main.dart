@@ -7,7 +7,6 @@ import 'package:socket_logger/services/alert_service.dart';
 import 'package:socket_logger/services/log_service.dart';
 import 'package:socket_logger/services/socket_service.dart';
 import 'package:socket_logger/themes.dart';
-import 'package:socket_logger/themes/dark_theme.dart';
 
 import 'widgets/home.dart';
 
