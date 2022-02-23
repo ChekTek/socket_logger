@@ -18,7 +18,7 @@ class ClearButton extends StatelessWidget {
           logService.clear();
         },
         icon: const Icon(Icons.delete),
-        color: Colors.red,
+        color: Theme.of(context).errorColor,
         hoverColor: Colors.transparent,
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,

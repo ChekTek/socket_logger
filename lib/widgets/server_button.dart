@@ -20,8 +20,7 @@ class _ServerButtonState extends State<ServerButton> {
   Widget build(BuildContext context) {
     var connectButton = MaterialButton(
         child: const Text('Start'),
-        color: Colors.blue,
-        textColor: Colors.white,
+        color: Theme.of(context).primaryColor,
         onPressed: () {
           socketService.connect(widget.serverStringController.text);
           setState(() {});
@@ -29,8 +28,7 @@ class _ServerButtonState extends State<ServerButton> {
 
     var disconnectButton = MaterialButton(
         child: const Text('Stop'),
-        color: Colors.red,
-        textColor: Colors.white,
+        color: Theme.of(context).errorColor,
         onPressed: () {
           socketService.disconnect();
           setState(() {});

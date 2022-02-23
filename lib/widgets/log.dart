@@ -22,13 +22,11 @@ class Log extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: const [
                 BoxShadow(
-                  color: Colors.black26,
                   spreadRadius: 2,
                   blurRadius: 2,
                   offset: Offset(0, 1),
                 ),
               ],
-              color: Colors.grey[400],
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(4.0),
                 topRight: Radius.circular(4.0),
@@ -43,7 +41,7 @@ class Log extends StatelessWidget {
                 style: const TextStyle(color: Colors.white),
               ),
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).secondaryHeaderColor,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(4.0),
                   topRight: Radius.circular(4.0),
