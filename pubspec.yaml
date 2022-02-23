@@ -38,6 +38,12 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.9.2
+flutter_icons:
+  macos: true
+  windows: true
+  image_path: 'lib/assets/tabler-icon-file-shredder.png'
+
   flutter_test:
     sdk: flutter
 
