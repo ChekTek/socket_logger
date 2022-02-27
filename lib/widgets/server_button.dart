@@ -35,7 +35,7 @@ class _ServerButtonState extends State<ServerButton> {
         });
 
     return Padding(
-        padding: const EdgeInsetsDirectional.only(start: 8.0, top: 10.0),
+        padding: const EdgeInsetsDirectional.only(start: 14.0, top: 12.0),
         child: StreamBuilder(
             stream: socketService.status,
             builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
