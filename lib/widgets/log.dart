@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Log extends StatelessWidget {
   final String log;
@@ -22,9 +23,10 @@ class Log extends StatelessWidget {
             decoration: BoxDecoration(
               boxShadow: const [
                 BoxShadow(
-                  spreadRadius: 2,
-                  blurRadius: 2,
+                  spreadRadius: 1,
+                  blurRadius: 3,
                   offset: Offset(0, 1),
+                  color: Colors.black12,
                 ),
               ],
               borderRadius: const BorderRadius.only(
@@ -52,14 +54,35 @@ class Log extends StatelessWidget {
         ),
         Card(
           margin: const EdgeInsets.only(top: 0.0, left: 8.0, right: 8.0),
-          elevation: 3.0,
-          child: Column(
+          elevation: 4.0,
+          child: Row(
             children: [
-              Container(
-                child: Text(log),
-                margin: const EdgeInsets.all(4.0),
-                padding: const EdgeInsets.all(15.0),
-                width: double.infinity,
+              Flexible(
+                child: Container(
+                  child: Text(log),
+                  padding: const EdgeInsets.only(
+                    left: 15.0,
+                    top: 15.0,
+                    bottom: 15.0,
+                  ),
+                  width: double.infinity,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Flex(
+                  direction: Axis.horizontal,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Clipboard.setData(ClipboardData(text: log));
+                      },
+                      splashRadius: 20.0,
+                      iconSize: 20,
+                      icon: Icon(Icons.copy),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

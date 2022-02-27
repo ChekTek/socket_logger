@@ -11,18 +11,19 @@ class ClearButton extends StatelessWidget {
   Widget build(BuildContext context) {
     LogService logService = getIt<LogService>();
 
-    return Container(
-      margin: const EdgeInsetsDirectional.only(end: 8.0, top: 8.0),
-      child: IconButton(
-        onPressed: () {
-          logService.clear();
-        },
-        icon: const Icon(Icons.delete),
-        color: Theme.of(context).errorColor,
-        hoverColor: Colors.transparent,
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        focusColor: Colors.transparent,
+    return Padding(
+      padding: const EdgeInsets.only(left: 4.0),
+      child: Container(
+        margin: const EdgeInsetsDirectional.only(end: 8.0, top: 8.0),
+        child: IconButton(
+          onPressed: () {
+            logService.clear();
+          },
+          icon: const Icon(Icons.delete),
+          color: Theme.of(context).errorColor,
+          splashRadius: 18.0,
+          iconSize: 22,
+        ),
       ),
     );
   }
