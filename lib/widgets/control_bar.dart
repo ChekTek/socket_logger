@@ -34,6 +34,10 @@ class _ControlBarState extends State<ControlBar> {
       socketService.connect(serverInput.controller.text);
     }
 
+    serverInput.controller.addListener(() {
+      preferenceService.setHost(serverInput.controller.text);
+    });
+
     serverButton = ServerButton(serverStringController: serverInput.controller);
   }
 
