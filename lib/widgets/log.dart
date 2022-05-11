@@ -55,6 +55,7 @@ class Log extends StatelessWidget {
         Card(
           margin: const EdgeInsets.only(top: 0.0, left: 8.0, right: 8.0),
           elevation: 4.0,
+          color: Theme.of(context).backgroundColor,
           child: Row(
             children: [
               Flexible(

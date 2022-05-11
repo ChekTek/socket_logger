@@ -22,7 +22,7 @@ class _ServerButtonState extends State<ServerButton> {
         child: const Text('Start'),
         color: Theme.of(context).primaryColor,
         onPressed: () {
-          socketService.connect(widget.serverStringController.text);
+          socketService.connect(int.parse(widget.serverStringController.text));
           setState(() {});
         });
 

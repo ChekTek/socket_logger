@@ -5,12 +5,12 @@ class Preferences {
 
   Preferences(this._sharedPreferences);
 
-  String get host {
-    return _sharedPreferences.getString('host') ?? '';
+  int get host {
+    return _sharedPreferences.getInt('port') ?? 8080;
   }
 
-  void setHost(String host) {
-    _sharedPreferences.setString('host', host);
+  void setHost(int port) {
+    _sharedPreferences.setInt('port', port);
   }
 
   bool get autoStart {

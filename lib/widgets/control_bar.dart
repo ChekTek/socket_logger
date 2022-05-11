@@ -31,11 +31,11 @@ class _ControlBarState extends State<ControlBar> {
     super.initState();
 
     if (preferenceService.autoStart) {
-      socketService.connect(serverInput.controller.text);
+      socketService.connect(int.parse(serverInput.controller.text));
     }
 
     serverInput.controller.addListener(() {
-      preferenceService.setHost(serverInput.controller.text);
+      preferenceService.setHost(int.parse(serverInput.controller.text));
     });
 
     serverButton = ServerButton(serverStringController: serverInput.controller);

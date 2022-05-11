@@ -14,12 +14,13 @@ class SocketService {
   var connected = false;
   var connecting = false;
   late HttpServer server;
+  List<WebSocket> openSockets = [];
 
   final _statusController = StreamController<bool>();
 
   Stream<bool> get status => _statusController.stream;
 
-  connect(String socketString) async {
+  connect(int port) async {
     try {
       if (connecting || connected) {
         return;
@@ -27,22 +28,10 @@ class SocketService {
 
       connecting = true;
 
-      socketString = socketString.replaceAll('ws://', '');
-
-      var index = socketString.lastIndexOf(':');
-      if (index == -1) {
-        throw ('Invalid port');
-      }
-      var host = socketString.substring(0, index);
-      var port = int.tryParse(
-              socketString.substring(index + 1, socketString.length)) ??
-          -1;
-
-      List<WebSocket> openSockets = [];
-
-      server = await HttpServer.bind(host, port);
+      server = await HttpServer.bind('localhost', port);
       server.transform(WebSocketTransformer()).listen(
-        (socket) {
+        (WebSocket socket) {
+          logService.log('A new client has connected!');
           socket.listen((msg) {
             logService.log(msg);
           });
@@ -71,5 +60,11 @@ class SocketService {
     _statusController.sink.add(false);
     connected = false;
     connecting = false;
+  }
+
+  send(String message) {
+    for (var socket in openSockets) {
+      socket.add(message);
+    }
   }
 }
